@@ -1,9 +1,18 @@
 
-from cgitb import text
-from . import blog
-from flask import render_template, redirect
+from . import blog_bp
+from .models import Post, PostSchema
+from ..extentions import db
+
+from flask import redirect, jsonify
 
 
-@blog.route('/')
+@blog_bp.route('/')
 def index():
-    return {'title':'ABOBA', 'text':"Somebody once told me The world is gona roll me Ain't shapest tool in the sheild All star commin and an all star comming", 'pub_date':'yesterday'}
+    posts = Post.query.all()
+    responce = PostSchema(many=True)
+    print(responce.dump(posts))
+    return jsonify({'posts': responce.dump(posts)})
+
+@blog_bp.route('/post')
+def add_post():
+    return {'aboba':'acacadcac'}

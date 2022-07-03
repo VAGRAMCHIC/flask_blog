@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -24,9 +23,10 @@ from .admin.admin import admin_bp
 from .blog import blog_bp
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+app = Flask('photozz')
+
 
 def create_app(): 
-    app = Flask('photozz')
     app.config.update(dict(
         SQLALCHEMY_DATABASE_URI=get_env_variable('SQLALCHEMY_DATABASE_URI'),
         DEBUG=get_env_variable('DEBUG'),
@@ -35,8 +35,8 @@ def create_app():
         PASSWORD=get_env_variable('PASSWORD')
     ))
     register_extentons(app)
-    
     register_blueprints(app)
+    
     return app
     
 
@@ -44,7 +44,8 @@ def create_app():
 def register_extentons(app):
     db.init_app(app)
     ma.init_app(app)
-
+    migrate.init_app(app, db)
+    
 def register_blueprints(app):
     app.register_blueprint(blog_bp, url_prefix = '/blog')
     app.register_blueprint(admin_bp, url_prefix = '/admin')

@@ -1,6 +1,6 @@
-from flask_script._compat import text_type
+from flask_app import create_app
+
 from flask_script import Manager, Command
-from . import create_app, app
 
 
 app = create_app()

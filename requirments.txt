@@ -1,0 +1,8 @@
+flask
+flask-script
+flask-migrate
+flask-marshmallow
+flask-sqlalchemy
+
+python-dotenv
+psycopg2-binary

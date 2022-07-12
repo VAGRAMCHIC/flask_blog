@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -19,27 +19,11 @@ def get_env_variable(env_var_name: str):
 
 
 from .extentions import *
-from .admin.admin import admin_bp
+from .admin import admin_bp
 from .blog import blog_bp
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 app = Flask('photozz')
-
-
-def create_app(): 
-    app.config.update(dict(
-        SQLALCHEMY_DATABASE_URI=get_env_variable('SQLALCHEMY_DATABASE_URI'),
-        DEBUG=get_env_variable('DEBUG'),
-        SECRET_KEY=get_env_variable('SECRET_KEY'),
-        USERNAME=get_env_variable('USERNAME'),
-        PASSWORD=get_env_variable('PASSWORD')
-    ))
-    register_extentons(app)
-    register_blueprints(app)
-    
-    return app
-    
-
 
 def register_extentons(app):
     db.init_app(app)
@@ -49,3 +33,23 @@ def register_extentons(app):
 def register_blueprints(app):
     app.register_blueprint(blog_bp, url_prefix = '/blog')
     app.register_blueprint(admin_bp, url_prefix = '/admin')
+
+def create_app(): 
+    app.config.update(
+        SQLALCHEMY_DATABASE_URI=get_env_variable('SQLALCHEMY_DATABASE_URI'),
+        DEBUG=get_env_variable('DEBUG'),
+        SECRET_KEY=get_env_variable('SECRET_KEY'),
+        USERNAME=get_env_variable('USERNAME'),
+        PASSWORD=get_env_variable('PASSWORD')
+    )
+    register_extentons(app)
+    register_blueprints(app)
+    
+    return app
+    
+if __name__=='__main__':
+    app = create_app()
+    app.run()
+
+
+
